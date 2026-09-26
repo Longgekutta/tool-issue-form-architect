@@ -14,6 +14,7 @@ class ScaffoldConfig:
     include_feature_request: bool = True
     include_pr_template: bool = True
     include_codeowners: bool = True
+    include_community_health: bool = False
     disable_blank_issues: bool = True
 
 class IssueFormScaffolder:
@@ -59,4 +60,42 @@ class IssueFormScaffolder:
             co_file.write_text(GovernanceTemplates.codeowners(cfg.owner), encoding="utf-8")
             created_files.append(co_file)
 
+        # 6. Community health suite
+        if cfg.include_community_health:
+            created_files.extend(self.scaffold_community_health(root, project_name=root.name))
+
         return created_files
+
+    def scaffold_community_health(self, target_dir: str | Path, project_name: str = "") -> List[Path]:
+        root = Path(target_dir).resolve()
+        gh_dir = root / ".github"
+        gh_dir.mkdir(parents=True, exist_ok=True)
+        name = project_name or root.name
+        created: List[Path] = []
+
+        # SECURITY.md
+        sec = root / "SECURITY.md"
+        sec.write_text(GovernanceTemplates.security_md(name), encoding="utf-8")
+        created.append(sec)
+
+        # CONTRIBUTING.md
+        contrib = root / "CONTRIBUTING.md"
+        contrib.write_text(GovernanceTemplates.contributing_md(name), encoding="utf-8")
+        created.append(contrib)
+
+        # CODE_OF_CONDUCT.md
+        coc = root / "CODE_OF_CONDUCT.md"
+        coc.write_text(GovernanceTemplates.code_of_conduct_md(), encoding="utf-8")
+        created.append(coc)
+
+        # SUPPORT.md
+        supp = root / "SUPPORT.md"
+        supp.write_text(GovernanceTemplates.support_md(name), encoding="utf-8")
+        created.append(supp)
+
+        # FUNDING.yml
+        funding = gh_dir / "FUNDING.yml"
+        funding.write_text(GovernanceTemplates.funding_yml(self.config.owner), encoding="utf-8")
+        created.append(funding)
+
+        return created

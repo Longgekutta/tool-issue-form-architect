@@ -65,5 +65,23 @@ class TestIssueFormArchitectOffline(unittest.TestCase):
             criticals = [i for i in issues if i.severity == IssueSeverity.CRITICAL]
             self.assertEqual(len(criticals), 0)
 
+    def test_06_community_health_scaffold_and_lint(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            scaffolder = IssueFormScaffolder(ScaffoldConfig(include_community_health=True))
+            scaffolder.scaffold(tmp)
+
+            self.assertTrue((tmp / "SECURITY.md").exists())
+            self.assertTrue((tmp / "CONTRIBUTING.md").exists())
+            self.assertTrue((tmp / "CODE_OF_CONDUCT.md").exists())
+            self.assertTrue((tmp / "SUPPORT.md").exists())
+            self.assertTrue((tmp / ".github" / "FUNDING.yml").exists())
+
+            linter = FormLinter()
+            issues = linter.lint_repo(tmp)
+            rule_ids = [i.rule_id for i in issues]
+            self.assertNotIn("GOV_MISSING_SECURITY_POLICY", rule_ids)
+            self.assertNotIn("GOV_MISSING_CONTRIBUTING_GUIDE", rule_ids)
+
 if __name__ == "__main__":
     unittest.main()

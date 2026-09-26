@@ -76,6 +76,7 @@ def scaffold_cmd(args) -> int:
         include_feature_request=not args.no_feature_request,
         include_pr_template=not args.no_pr_template,
         include_codeowners=not args.no_codeowners,
+        include_community_health=getattr(args, "community_health", False),
         disable_blank_issues=not args.allow_blank_issues
     )
     scaffolder = IssueFormScaffolder(config)
@@ -84,6 +85,21 @@ def scaffold_cmd(args) -> int:
     print(f"[✔] Successfully architected {len(created)} governance files for {target_dir.name}:")
     for f in created:
         print(f"    - {f.relative_to(target_dir)}")
+    return 0
+
+def health_suite_cmd(args) -> int:
+    target_dir = Path(args.target).resolve()
+    if not target_dir.is_dir():
+        print(f"Error: Target directory does not exist: {target_dir}", file=sys.stderr)
+        return 1
+
+    config = ScaffoldConfig(owner=args.owner)
+    scaffolder = IssueFormScaffolder(config)
+    created = scaffolder.scaffold_community_health(target_dir, project_name=args.name or target_dir.name)
+
+    print(f"[✔] Successfully scaffolded Community Health Suite ({len(created)} files):")
+    for f in created:
+        print(f"    - {f.name}")
     return 0
 
 def lint_cmd(args) -> int:
@@ -156,8 +172,15 @@ def main() -> int:
     p_scaffold.add_argument("--no-feature-request", action="store_true", help="Exclude feature request form")
     p_scaffold.add_argument("--no-pr-template", action="store_true", help="Exclude pull request template")
     p_scaffold.add_argument("--no-codeowners", action="store_true", help="Exclude CODEOWNERS file")
+    p_scaffold.add_argument("--community-health", action="store_true", help="Include full community health suite (SECURITY, CONTRIBUTING, etc.)")
     p_scaffold.add_argument("--allow-blank-issues", action="store_true", help="Allow blank unstructured issues")
     p_scaffold.set_defaults(func=scaffold_cmd)
+
+    p_hs = subparsers.add_parser("health-suite", help="Scaffold complete GitHub Community Health suite (SECURITY, CONTRIBUTING, CODE_OF_CONDUCT, SUPPORT, FUNDING)")
+    p_hs.add_argument("--target", default=".", help="Target project root directory")
+    p_hs.add_argument("--name", default=None, help="Custom project display name")
+    p_hs.add_argument("--owner", default="maintainer", help="GitHub username/team for FUNDING/CODEOWNERS")
+    p_hs.set_defaults(func=health_suite_cmd)
 
     p_lint = subparsers.add_parser("lint", help="Lint repository for issue form and governance anti-patterns")
     p_lint.add_argument("--target", default=".", help="Target project root directory")

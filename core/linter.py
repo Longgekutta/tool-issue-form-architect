@@ -120,4 +120,44 @@ class FormLinter:
                 remediation="Create .github/CODEOWNERS mapping directory patterns to maintainers."
             ))
 
+        # Check Community Health Files: SECURITY.md
+        if not (root / "SECURITY.md").exists() and not (gh_dir / "SECURITY.md").exists():
+            issues.append(FormLintIssue(
+                file_path=str(root),
+                rule_id="GOV_MISSING_SECURITY_POLICY",
+                severity=IssueSeverity.WARNING,
+                message="Missing SECURITY.md. Repository lacks public vulnerability disclosure guidelines.",
+                remediation="Run 'python main.py health-suite' to scaffold SECURITY.md and community health files."
+            ))
+
+        # Check CONTRIBUTING.md
+        if not (root / "CONTRIBUTING.md").exists() and not (gh_dir / "CONTRIBUTING.md").exists():
+            issues.append(FormLintIssue(
+                file_path=str(root),
+                rule_id="GOV_MISSING_CONTRIBUTING_GUIDE",
+                severity=IssueSeverity.INFO,
+                message="Missing CONTRIBUTING.md for contributor onboarding.",
+                remediation="Add CONTRIBUTING.md outlining development workflow and testing requirements."
+            ))
+
+        # Check CODE_OF_CONDUCT.md
+        if not (root / "CODE_OF_CONDUCT.md").exists() and not (gh_dir / "CODE_OF_CONDUCT.md").exists():
+            issues.append(FormLintIssue(
+                file_path=str(root),
+                rule_id="GOV_MISSING_CODE_OF_CONDUCT",
+                severity=IssueSeverity.INFO,
+                message="Missing CODE_OF_CONDUCT.md.",
+                remediation="Adopt Contributor Covenant CODE_OF_CONDUCT.md."
+            ))
+
+        # Check FUNDING.yml
+        if not (gh_dir / "FUNDING.yml").exists() and not (root / "FUNDING.yml").exists():
+            issues.append(FormLintIssue(
+                file_path=str(gh_dir),
+                rule_id="GOV_MISSING_FUNDING",
+                severity=IssueSeverity.INFO,
+                message="Missing .github/FUNDING.yml sponsor button configuration.",
+                remediation="Create .github/FUNDING.yml to display sponsor button."
+            ))
+
         return issues

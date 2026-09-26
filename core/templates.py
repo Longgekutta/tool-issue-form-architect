@@ -160,3 +160,80 @@ Fixes #(issue)
 /specs/             {clean_owner}
 /docs/              {clean_owner}
 """
+
+    @staticmethod
+    def security_md(project_name: str = "Project") -> str:
+        return f"""# Security Policy for {project_name}
+
+## Supported Versions
+
+Only the latest released versions are actively maintained with security updates.
+
+| Version | Supported          |
+| ------- | ------------------ |
+| latest  | :white_check_mark: |
+| < 1.0   | :x:                |
+
+## Reporting a Vulnerability
+
+We take the security of {project_name} seriously. If you discover a vulnerability:
+
+1. **Do not** report security vulnerabilities via public GitHub issues.
+2. Submit a private report via **GitHub Security Advisories**:  
+   `https://github.com/<owner>/<repo>/security/advisories/new`
+3. We will respond within 48 hours to validate the report and coordinate a fix.
+"""
+
+    @staticmethod
+    def contributing_md(project_name: str = "Project") -> str:
+        return f"""# Contributing to {project_name}
+
+Thank you for contributing to {project_name}! We appreciate your efforts to improve the codebase.
+
+## Development Workflow
+
+1. Fork and clone the repository.
+2. Ensure you have Python >= 3.10 installed.
+3. Run the offline test suite before making changes:
+   ```bash
+   python main.py test
+   python main.py health
+   ```
+4. Create a descriptive feature branch:
+   ```bash
+   git checkout -b feat/my-enhancement
+   ```
+5. Commit using Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`).
+6. Open a Pull Request filling out the PR template.
+"""
+
+    @staticmethod
+    def code_of_conduct_md() -> str:
+        return """# Contributor Covenant Code of Conduct
+
+## Our Pledge
+We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, color, religion, or sexual identity and orientation.
+
+## Enforcement
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project leaders responsible for enforcement.
+"""
+
+    @staticmethod
+    def support_md(project_name: str = "Project") -> str:
+        return f"""# Support & Resources for {project_name}
+
+Need help with {project_name}? Here are the official support channels:
+
+- **GitHub Discussions**: Share ideas, ask questions, or showcase solutions.
+- **GitHub Issues**: Report confirmed bugs or propose new architectural features.
+- **Security**: For private vulnerability reports, see [SECURITY.md](SECURITY.md).
+"""
+
+    @staticmethod
+    def funding_yml(github_user: str = "maintainer") -> str:
+        clean_user = github_user.lstrip("@")
+        return f"""# GitHub Sponsors and Community Funding
+# Reference: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+github: [{clean_user}]
+"""
