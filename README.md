@@ -3,6 +3,12 @@
 > **GitHub 强类型 YAML Issue 表单、PR 模板与 CODEOWNERS 协作治理架构师**  
 > Universal CLI Facade (UCFS v1.0) 标准实现 | 100% 离线自省 | 高信噪比社区治理契约生成
 
+> [!NOTE]
+> **第一性原理架构收敛声明 (Evolution Notice)**:  
+> 本工具所包含的 Issue 结构化表单、PR 协作模板与 CODEOWNERS 治理规范，已正式通过第一性原理仲裁并收敛归入高内聚特种技能 [skill-github-ops](file:///D:/github/skill-github-ops)（三级渐进式披露架构）。  
+> 存量代码已冻结并归档保留。在现代 AI 协同中，推荐直接调用 `skill-github-ops` 享受更轻量、零 Token 浪费的最佳实践。
+
+
 ---
 
 ## 🌟 核心价值与实用性痛点解答
